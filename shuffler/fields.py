@@ -8,9 +8,8 @@ class Field(object):
     def __init__(self, *args, **kwargs):
         super(Field, self).__init__()
 
-
     def get_data(self, name, instance_data=None):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def prepare(self, name=None, queryset=None):
         """
