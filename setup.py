@@ -8,6 +8,5 @@ setup(
     author='Telminov Sergey',
     url='https://github.com/telminov/shuffler',
     packages=['shuffler',],
-    long_description=open('README.md').read(),
     license='The MIT License',
 )
