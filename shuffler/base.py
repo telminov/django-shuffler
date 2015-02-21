@@ -70,18 +70,31 @@ class BaseShuffler(object):
         :return:
         """
         self.prepare()
-
         # пройдемся по табличке
         qs = self.get_queryset()
         for instance in qs:
-            # сгенерим данные для объекта
-            values = {}
-            for field_name, field in self.fields.items():
-                instance_data = model_to_dict(instance)
-                value = field.get_data(field_name, instance_data)
-                values[field_name] = value
-            # обновим значение в базе
-            self.opts.model.objects.filter(pk=instance.pk).update(**values)
+            #
+            while True:
+                exceptions = []
+                # try to update object 3 times.
+                try:
+                    values = {}
+                    # сгенерим данные для объекта
+                    for field_name, field in self.fields.items():
+                        instance_data = model_to_dict(instance)
+                        value = field.get_data(field_name, instance_data)
+                        values[field_name] = value
+
+                        # обновим значение в базе
+
+                        self.opts.model.objects.filter(pk=instance.pk).update(**values)
+                    break
+                except Exception as ex:
+                    # дадим шанс 3 раза сгенерить данные
+                    if len(exceptions) < 3:
+                        exceptions.append(ex)
+                    else:
+                        raise Exception('Triple faker create exception: %s' % u', '.join(map(unicode, exceptions)))
 
     def get_queryset(self):
         if self.opts.filters:
