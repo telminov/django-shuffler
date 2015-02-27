@@ -1,4 +1,6 @@
 .idea
+*.pyc
+*.sqlite3
 MANIFEST
 build/
 dist/
